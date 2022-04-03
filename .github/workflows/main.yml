@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build-and-test:
     name: Build and run tests
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout current repository in ubuntu's file system 
         uses: actions/checkout@v1
@@ -13,7 +13,5 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Print contents in current directory
-        run: ls -la
-      - name: Unit tests
+      - name: Run unit tests
         run: ./gradlew testDebugUnitTest
