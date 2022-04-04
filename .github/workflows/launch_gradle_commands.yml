@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: app-debug
-          path: app/build/outputs/apk/mockClient/debug/app-mock-client-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Uploading Android Test Build
@@ -49,5 +49,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: android-test
-          path: app/build/outputs/apk/androidTest/mockClient/debug/app-mock-client-debug-androidTest.apk
+          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
           if-no-files-found: error
