@@ -1,35 +1,68 @@
-name: CI Workflow
+name: CI
 
-on: [push]
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 
 jobs:
-  build-and-test:
-    name: Build and run tests
-    runs-on: macos-latest
+  codesmell:
+    name: Code Smell (Detekt, CheckStyle, Lint)
+    uses: ./.github/workflows/launch_gradle_commands.yml
+    secrets:
+      GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+    with:
+      commands: lint detekt checkstyle
+
+  unitTest:
+    name: Unit Tests
+    uses: ./.github/workflows/launch_gradle_commands.yml
+    secrets:
+      GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+    with:
+      commands: testReleaseUnitTest
+
+  generateApks:
+    name: Generate APKs
+    uses: ./.github/workflows/launch_gradle_commands.yml
+    secrets:
+      GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+    with:
+      commands: assembleMockClientDebug assembleMockClientDebugAndroidTest
+      uploadArtifacts: true
+
+  uiTests:
+    name: UI Tests on Firebase Test Labs
+    needs: generateApks
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout current repository in ubuntu's file system 
-        uses: actions/checkout@v3
-      - name: Setup JDK 11
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v2
+
+      - name: Download App Debug APK
+        id: app-debug-download
+        uses: actions/download-artifact@v2
         with:
-          distribution: 'zulu'
-          java-version: '11'
-      - name: Run lint check
-        run: ./gradlew lint
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
-      - name: Run instrumentation tests
-        uses: reactivecircus/android-emulator-runner@v2
+          name: app-debug
+
+      - name: Download Android Test APK
+        id: android-test-download
+        uses: actions/download-artifact@v2
         with:
-          api-level: 29
-          arch: x86
-          profile: Nexus 6
-          avd-name: test
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew connectedCheck
-      - name: Upload Reports
-        uses: actions/upload-artifact@v1
+          name: android-test
+
+      - name: Login to Google Cloud
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          name: reports
-          path: app/build/reports
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+
+      - name: Set current project
+        run: gcloud config set project ${{ secrets.FIREBASE_PROJECT_ID }}
+
+      - name: Run Instrumentation Tests in Firebase Test Lab
+        env:
+          APP_DEBUG_LOCATION: app-mock-client-debug.apk
+          ANDROID_TEST_LOCATION: app-mock-client-debug-androidTest.apk
+          DEVICE_MODEL: Nexus9,version=24,locale=en,orientation=landscape
+        run: gcloud firebase test android run --type instrumentation --app $APP_DEBUG_LOCATION --test $ANDROID_TEST_LOCATION --device model=$DEVICE_MODEL --use-orchestrator --num-flaky-test-attempts 2
