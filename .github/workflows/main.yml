@@ -29,7 +29,7 @@ jobs:
     secrets:
       GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
     with:
-      commands: assembleMockClientDebug assembleMockClientDebugAndroidTest
+      commands: assembleDebug assembleDebugAndroidTest
       uploadArtifacts: true
 
   uiTests:
