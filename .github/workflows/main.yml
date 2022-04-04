@@ -2,18 +2,18 @@ name: CI
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ develop ]
+    branches: [ main ]
 
 jobs:
   codesmell:
-    name: Code Smell (Detekt, CheckStyle, Lint)
+    name: Code Smell (Detekt, Lint)
     uses: ./.github/workflows/launch_gradle_commands.yml
     secrets:
       GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
     with:
-      commands: lint detekt checkstyle
+      commands: lint detekt
 
   unitTest:
     name: Unit Tests
