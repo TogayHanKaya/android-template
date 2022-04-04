@@ -62,7 +62,7 @@ jobs:
 
       - name: Run Instrumentation Tests in Firebase Test Lab
         env:
-          APP_DEBUG_LOCATION: app-mock-client-debug.apk
-          ANDROID_TEST_LOCATION: app-mock-client-debug-androidTest.apk
+          APP_DEBUG_LOCATION: app-debug.apk
+          ANDROID_TEST_LOCATION: app-debug-androidTest.apk
           DEVICE_MODEL: Nexus9,version=24,locale=en,orientation=landscape
         run: gcloud firebase test android run --type instrumentation --app $APP_DEBUG_LOCATION --test $ANDROID_TEST_LOCATION --device model=$DEVICE_MODEL --use-orchestrator --num-flaky-test-attempts 2
