@@ -51,3 +51,9 @@ jobs:
           name: android-test
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
           if-no-files-found: error
+
+      - name: Upload Reports
+        uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: app/build/reports

@@ -35,7 +35,7 @@ jobs:
   uiTests:
     name: UI Tests on Firebase Test Labs
     needs: generateApks
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
