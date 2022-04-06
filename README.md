@@ -18,3 +18,4 @@ Provide high quality project standards as a template project.
 - Update to JUnit5
 - Integrate SonarQube
 - Distribute successful builds 
+- Integrate ktlint
