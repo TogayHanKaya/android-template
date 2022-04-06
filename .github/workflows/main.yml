@@ -35,7 +35,7 @@ jobs:
   uiTests:
     name: UI Tests on Firebase Test Labs
     needs: generateApks
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -64,5 +64,5 @@ jobs:
         env:
           APP_DEBUG_LOCATION: app-debug.apk
           ANDROID_TEST_LOCATION: app-debug-androidTest.apk
-          DEVICE_MODEL: Nexus9,version=24,locale=en,orientation=landscape
+          DEVICE_MODEL: Nexus9,version=24,locale=en,orientation=portrait
         run: gcloud firebase test android run --type instrumentation --app $APP_DEBUG_LOCATION --test $ANDROID_TEST_LOCATION --device model=$DEVICE_MODEL --use-orchestrator --num-flaky-test-attempts 2
