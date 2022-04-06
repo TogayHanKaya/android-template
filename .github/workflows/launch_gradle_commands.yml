@@ -53,7 +53,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload Reports
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: reports
           path: app/build/reports
