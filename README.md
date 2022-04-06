@@ -11,3 +11,4 @@ Provide high quality standards as a starter project.
 - Runs unit tests. Blocks merge if a test is failing.
 - Runs UI tests on Firebase Test Labs. Blocks merge if a test is failing.
 - Upload lint, detekt and test reports to action.
+- Protects google-services.json by passing it from action secrets, rather than a file in the repo.
