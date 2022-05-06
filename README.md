@@ -19,3 +19,4 @@ Provide high quality project standards as a template project.
 - Integrate SonarQube
 - Distribute successful builds 
 - Integrate ktlint
+- Integrate spotless
